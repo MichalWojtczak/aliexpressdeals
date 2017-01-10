@@ -1,8 +1,8 @@
 //var flashProducts = JSON.parse('../data/flash.json');
 //var dailyProducts = JSON.parse('../data/daily.json');
 //var hotProducts = JSON.parse('../data/hot.json');
-
-var productsHtml = '<div class="products">';
+var productsContainer = $(".products");
+var productsHtml = '';
 var productHtml = '';
 
 //Dev values
@@ -46,8 +46,7 @@ var reviewScore = 3.0;
   productsHtml += productHtml;
   // TODO: Do i add product to DOM here or wait for all to finish?
 //endforeach
-
-productsHtml += '</div>'; //Closing products
+productsContainer.html(productsHtml);
 
 
 
