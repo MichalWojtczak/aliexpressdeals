@@ -22,21 +22,21 @@ cron.schedule('1 0 * * *', function(){
 
 
 var reqOptions = {
-  host: url,
+  host: 'gw.api.alibaba.com',
   port: 80,
-  path: '/resource?id=foo&bar=baz',
-  //gw.api.alibaba.com/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=totalResults,productId,productTitle,discount,volume&categoryId=44&sort=volumeDown
+  path: '/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=totalResults,productId,productTitle,productUrl,imageUrl,salePrice,discount,evaluateScore,volume&categoryId=44&sort=volumeDown',
   method: 'POST'
 };
 
 
 var getProducts = function(categoryId, file) = function(){
+  var fileUrl = "/" + file;
   http.request(reqOptions, function(res) {
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      fs.writeFile("/flash.json", chunk, function(err) {
+      fs.writeFile(fileUrl, chunk, function(err) {
           if(err) {
               return console.log(err);
           }
