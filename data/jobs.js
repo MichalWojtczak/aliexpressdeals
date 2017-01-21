@@ -142,6 +142,6 @@ var processData = function(){
   //Sort JSON files on discount and then on volume
   getProducts(categoryIds);
   //TODO: Sort on discount ruins volume sort.
-  //TODO: Get more pages(of 40 products) per category
+  //TODO: Get more pages(of 40 products) per category (&pageSize=40&pageNo=)
 
 //});
