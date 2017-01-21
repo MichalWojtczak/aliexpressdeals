@@ -141,6 +141,7 @@ var processData = function(){
   //Concat all category JSON files
   //Sort JSON files on discount and then on volume
   getProducts(categoryIds);
-
+  //TODO: Sort on discount ruins volume sort.
+  //TODO: Get more pages(of 40 products) per category
 
 //});
