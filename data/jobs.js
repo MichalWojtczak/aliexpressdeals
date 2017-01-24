@@ -3,33 +3,36 @@ var http = require('http');
 var fs = require('fs');
 
 var categoryIds = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,200001996,36,39,1524,1501,21,509,30,322,18,1420,26,200003498,1511,320];
-var url = "http://gw.api.alibaba.com/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=productId,productTitle,productUrl,imageUrl,salePrice,discount,evaluateScore,volume&sort=volumeDown&categoryId="
+var url = "http://gw.api.alibaba.com/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=productId,productTitle,productUrl,imageUrl,salePrice,discount,evaluateScore,volume&sort=volumeDown&pageSize=40&categoryId="
 var file = "";
 var productsFile = "products.json";
 
 var getProducts = function(categoryIds) {
   var categoryId = categoryIds.shift();
-  var catUrl = url + categoryId;
-  var file = "category" + categoryId + ".json";
-  body = "";
-  http.get(catUrl, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    //console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      body += chunk;
+  //Get 5 * 40 products = 200 per category
+  for(var i = 1; i < 6; i++){
+    var catUrl = url + categoryId + "&pageNo=" + i;
+    var file = "category" + categoryId + "_" + i + ".json";
+    body = "";
+    http.get(catUrl, function(res) {
+      console.log('STATUS: ' + res.statusCode);
+      //console.log('HEADERS: ' + JSON.stringify(res.headers));
+      res.setEncoding('utf8');
+      res.on('data', function (chunk) {
+        body += chunk;
+      });
+      res.on('end', function(){
+        console.log(file);
+        fs.writeFileSync(file, body);
+        if(categoryIds.length){
+          getProducts(categoryIds);
+        }
+        else if (i == 5){
+          processData();
+        }
+      });
     });
-    res.on('end', function(){
-      console.log(file);
-      fs.writeFileSync(file, body);
-      if(categoryIds.length){
-        getProducts(categoryIds);
-      }
-      else {
-        processData();
-      }
-    });
-  });
+  }
 }
 
 var addCategoryIdToProducts = function(categoryId, file){
@@ -122,6 +125,25 @@ var compareDiscount = function(a,b) {
   return 0;
 }
 
+var getTopProduct = function(file, amount){
+  var topFile = "topProducts.json";
+  try {
+    var contents = fs.readFileSync(file);
+  }
+  catch(err){
+    console.log(err);
+    console.log("Cannot open file " + file);
+  }
+  if(contents){
+    var jsonContent = JSON.parse(contents);
+    var jsonTopContent = JSON.parse(contents);
+    if(jsonContent.result){
+      jsonTopContent.result.products = jsonContent.result.products.slice(0,amount);
+      fs.writeFileSync(topFile, JSON.stringify(jsonTopContent));
+    }
+  }
+}
+
 var processData = function(){
   for(var i = 0; i < categoryIds.length; i++){
     file = "category" + categoryIds[i] + ".json";
@@ -141,7 +163,8 @@ var processData = function(){
   //Concat all category JSON files
   //Sort JSON files on discount and then on volume
   getProducts(categoryIds);
+  //getTopProducts("products.json", 24);
   //TODO: Sort on discount ruins volume sort.
-  //TODO: Get more pages(of 40 products) per category (&pageSize=40&pageNo=)
-
+  //TODO: Testing remains: Get more pages(of 40 products) per category (&pageSize=40&pageNo=)
+  //TODO: Create smaller file for first 20 products to increase pageload speed
 //});
