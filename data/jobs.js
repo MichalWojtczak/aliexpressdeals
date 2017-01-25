@@ -126,7 +126,7 @@ var compareDiscount = function(a,b) {
 }
 
 var getTopProduct = function(file, amount){
-  var topFile = "topProducts.json";
+  var topFile = "topproducts.json";
   try {
     var contents = fs.readFileSync(file);
   }
