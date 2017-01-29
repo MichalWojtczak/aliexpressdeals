@@ -2,6 +2,7 @@ var cron = require('node-cron');
 var http = require('http');
 var fs = require('fs');
 
+const CATEGORY_IDS = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,200001996,36,39,1524,1501,21,509,30,322,18,1420,26,200003498,1511,320];
 var categoryIds = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,200001996,36,39,1524,1501,21,509,30,322,18,1420,26,200003498,1511,320];
 var url = "http://gw.api.alibaba.com/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=productId,productTitle,productUrl,imageUrl,salePrice,discount,evaluateScore,volume&sort=volumeDown&pageSize=40&categoryId="
 var file = "";
@@ -194,9 +195,11 @@ var getTopProducts = function(file, amount){
 }
 
 var processData = function(){
-  for(var i = 0; i < categoryIds.length; i++){
-    file = "category" + categoryIds[i] + ".json";
-    addCategoryIdToProducts(categoryIds[i], file);
+  for(var i = 0; i < CATEGORY_IDS.length; i++){
+    for(var j = 1; j <= 5; j++){
+      file = "category" + CATEGORY_IDS[i] + "_" + j + ".json";
+      addCategoryIdToProducts(CATEGORY_IDS[i], file);
+    }
   }
   console.log("Finished adding IDs");
   concatProductJson(getCategoryFiles());

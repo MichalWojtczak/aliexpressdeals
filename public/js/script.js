@@ -15,8 +15,8 @@ var renderAllProducts = function(products, categoryIds){
   for(var i = 0; i < categoryIds.length; i++){
     productsContainer.append("<div class='category' data-categoryid='" + categoryIds[i] + "'></div>");
   }
-  for(var i = 0; i < 50; i++){
-    productsContainer.find("[data-categoryid='" + products[i].categoryId + "']").append(wrapHtml(products[i]))
+  for(var i = 0; i < products.length; i++){
+    productsContainer.find("[data-categoryid='" + products[i].category + "']").append(wrapHtml(products[i]))
   }
 }
 
@@ -33,7 +33,7 @@ var wrapHtml = function(product){
   productHtml += '<div class="pricewrapper">';
   productHtml +=   '<span class="price">' + product.salePrice + '$</span>';
   //productHtml +=   '<span class="oldprice">' + oldprice + '$</span>';
-  productHtml +=   '<span class="discount">' + product.discount + '</span>';
+  productHtml +=   '<span class="discount">' + product.discount + '%</span>';
   productHtml += '</div>'; //Closing pricewrapper
   productHtml += '<div class="review">';
   productHtml +=   '<div class="stars">';
@@ -44,7 +44,7 @@ var wrapHtml = function(product){
   productHtml +=   '</div>'; //Closing stars
   productHtml += '</div>'; //Closing review
   productHtml += '<div class="buy">';
-  productHtml += '<button href="' + product.productUrl  + '">Buy</button>';
+  productHtml += '<a href="' + product.productUrl  + '">Buy</a>';
   productHtml += '</div>'; //Closing buy
   productHtml += '</div>'; //Closing product
   return productHtml;
