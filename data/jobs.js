@@ -6,35 +6,83 @@ var categoryIds = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,2000019
 var url = "http://gw.api.alibaba.com/openapi/param2/2/portals.open/api.listPromotionProduct/19720?fields=productId,productTitle,productUrl,imageUrl,salePrice,discount,evaluateScore,volume&sort=volumeDown&pageSize=40&categoryId="
 var file = "";
 var productsFile = "products.json";
+var ajaxCallsRemaining = categoryIds.length * 5;
 
 var getProducts = function(categoryIds) {
+  var catUrl;
+  var files = [];
+  var returnedData = [];
   var categoryId = categoryIds.shift();
-  //Get 5 * 40 products = 200 per category
-  for(var i = 1; i < 6; i++){
-    var catUrl = url + categoryId + "&pageNo=" + i;
-    var file = "category" + categoryId + "_" + i + ".json";
-    body = "";
-    http.get(catUrl, function(res) {
-      console.log('STATUS: ' + res.statusCode);
-      //console.log('HEADERS: ' + JSON.stringify(res.headers));
-      res.setEncoding('utf8');
-      res.on('data', function (chunk) {
-        body += chunk;
-      });
-      res.on('end', function(){
-        console.log(file);
-        fs.writeFileSync(file, body);
-        if(categoryIds.length){
-          getProducts(categoryIds);
-        }
-        else if (i == 5){
+  for (var i = 0; i < 5; i++) {
+      var catUrl = url + categoryId + "&pageNo=" + (i+1);
+      files.push("category" + categoryId + "_" + (i+1) + ".json");
+      http.get(catUrl, function(res) {
+          // success handler from the ajax call
+          console.log('STATUS: ' + res.statusCode);
+          res.setEncoding('utf8');
+          // save response
+          var body = '';
+          var resEnded = false;
+          res.on('data', function(chunk){
+              body += chunk;
+          });
+
+          res.on('end', function(){
+              resEnded = true;
+              returnedData.push(body);
+              if(returnedData.length == 5){
+                for (var i = 0; i < 5; i++) {
+                  console.log(files[i]);
+                  fs.writeFileSync(files[i], returnedData[i]);
+                  if(categoryIds.length){
+                    getProducts(categoryIds);
+                  }
+                }
+              }
+              ajaxCallsRemaining--;
+              if (ajaxCallsRemaining <= 10) {
+                console.log("Remaining: " + ajaxCallsRemaining);
+              }
+              if (ajaxCallsRemaining <= 0) {
+                processData();
+              }
+          });
+
+          res.on('close', function(){
+            if(!resEnded){
+              returnedData.push("{}");
+              if(returnedData.length == 5){
+                for (var i = 0; i < 5; i++) {
+                  console.log(files[i]);
+                  fs.writeFileSync(files[i], returnedData[i]);
+                  if(categoryIds.length){
+                    getProducts(categoryIds);
+                  }
+                }
+              }
+            ajaxCallsRemaining--;
+            if (ajaxCallsRemaining <= 0) {
+              processData();
+            }
+            }
+          });
+
+      }).on('error', function(e){
+        console.log("Got an error: ", e);
+        ajaxCallsRemaining--;
+        if (ajaxCallsRemaining <= 0) {
           processData();
         }
-      });
-    });
-  }
-}
 
+      });
+  }
+
+      //res.on('end', function (chunk) {
+      //  body += chunk;
+      //});
+
+}
+//TODO: No category id at the moment...debug
 var addCategoryIdToProducts = function(categoryId, file){
   try {
     var contents = fs.readFileSync(file);
@@ -125,7 +173,7 @@ var compareDiscount = function(a,b) {
   return 0;
 }
 
-var getTopProduct = function(file, amount){
+var getTopProducts = function(file, amount){
   var topFile = "topproducts.json";
   try {
     var contents = fs.readFileSync(file);
@@ -141,6 +189,7 @@ var getTopProduct = function(file, amount){
       jsonTopContent.result.products = jsonContent.result.products.slice(0,amount);
       fs.writeFileSync(topFile, JSON.stringify(jsonTopContent));
     }
+    console.log("Wrote top products to " + file);
   }
 }
 
@@ -154,6 +203,7 @@ var processData = function(){
   console.log("Finished adding products to products.json");
   sortJsonByDiscountThenVolume("products.json");
   console.log("Finished sorting products.json");
+  getTopProducts("products.json", 24);
 }
 
 //cron.schedule('1 0 * * *', function(){
@@ -163,7 +213,6 @@ var processData = function(){
   //Concat all category JSON files
   //Sort JSON files on discount and then on volume
   getProducts(categoryIds);
-  //getTopProducts("products.json", 24);
   //TODO: Sort on discount ruins volume sort.
   //TODO: Testing remains: Get more pages(of 40 products) per category (&pageSize=40&pageNo=)
   //TODO: Create smaller file for first 20 products to increase pageload speed

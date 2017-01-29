@@ -1,19 +1,21 @@
 var renderTopProducts = function(products){
   var productsContainer = $(".products-list-discount");
-  var productsHtml, productHtml = '';
-  for(i = 0; i < products.length; i++){
-    // Add product to products
-    productsHtml += wrapHtml(product[i]);
+  var productsHtml = [];
+  var productHtml = '';
+  for(var i = 0; i < products.length; i++){
+    productsHtml.push(wrapHtml(products[i]));
   }
-  productsContainer.html(productsHtml);
+  for(var i = 0; i < productsHtml.length; i++){
+    productsContainer.append(productsHtml[i]);
+  }
 }
 
 var renderAllProducts = function(products, categoryIds){
-  var productsContainer = $(".product-list-categories");
-  for(i = 0; i < categoryIds.length; i++){
+  var productsContainer = $(".products-list-categories");
+  for(var i = 0; i < categoryIds.length; i++){
     productsContainer.append("<div class='category' data-categoryid='" + categoryIds[i] + "'></div>");
   }
-  for(i = 0; i < products.length; i++){
+  for(var i = 0; i < 50; i++){
     productsContainer.find("[data-categoryid='" + products[i].categoryId + "']").append(wrapHtml(products[i]))
   }
 }
@@ -35,7 +37,7 @@ var wrapHtml = function(product){
   productHtml += '</div>'; //Closing pricewrapper
   productHtml += '<div class="review">';
   productHtml +=   '<div class="stars">';
-  for(i = 0; i < parseInt(product.evaluateScore); i++){
+  for(var i = 0; i < parseInt(product.evaluateScore); i++){
     productHtml +=   '<span class="star"></span>';
   }
   productHtml +=     '<span class="rating">(' + product.evaluateScore + ')</span>';
@@ -52,23 +54,21 @@ var categoryIds = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,2000019
 
 var topProducts = [];
 
-$.getJSON('topproducts.json', function(data) {
-  $.each(result.products, function(index, product) {
+$.getJSON('data/topproducts.json', function(data) {
+  $.each(data.result.products, function(index, product) {
     topProducts.push(product);
   });
+  renderTopProducts(topProducts);
 });
-
-renderTopProducts(topProducts);
 
 var allProducts = [];
 
-$.getJSON('products.json', function(data) {
-  $.each(result.products, function(index, product) {
+$.getJSON('data/products.json', function(data) {
+  $.each(data.result.products, function(index, product) {
     allProducts.push(product);
   });
+  renderAllProducts(allProducts, categoryIds);
 });
-
-renderAllProducts(products);
 
 //Dev values
 var link = "#";
