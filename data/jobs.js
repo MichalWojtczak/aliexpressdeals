@@ -206,7 +206,7 @@ var processData = function(){
   console.log("Finished adding products to products.json");
   sortJsonByDiscountThenVolume("products.json");
   console.log("Finished sorting products.json");
-  getTopProducts("products.json", 24);
+  //getTopProducts("products.json", 24);
 }
 
 //cron.schedule('1 0 * * *', function(){
