@@ -18,3 +18,19 @@ h1 {
   font-size: 60px;
   margin-top: 180px;
 }
+
+.left-fixed {
+  position: fixed;
+  left: 0;
+  width: 150px;
+  height: 100vh;
+  @media screen and (max-width: 768px) {
+    width: 0;
+  }
+}
+
+.hidden-md-down {
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
