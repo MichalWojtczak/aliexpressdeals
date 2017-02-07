@@ -5,9 +5,11 @@ var initRenderTopProducts = function(products){
   for(var i = 0; i < products.length; i++){
     productsHtml.push(wrapHtml(products[i]));
   }
-  for(var i = 0; i < 24; i++){//productsHtml.length; i++){
+  for(var i = 0; i < 100; i++){//productsHtml.length; i++){
     productsContainer.append(productsHtml[i]);
   }
+  fixImageHeight();
+  capitalizeFirst();
 }
 
 var renderAllProducts = function(products, mainCategories){
@@ -17,9 +19,11 @@ var renderAllProducts = function(products, mainCategories){
       productsContainer.append("<div class='category' data-category='" + mainCategories[key] + "'></div>");
     }
   });
-  for(var i = 0; i < 200; i++){ //products.length; i++){
+  for(var i = 0; i < products.length; i++){
     productsContainer.find("[data-category='" + mainCategories[products[i].category] + "']").append(wrapHtml(products[i]))
   }
+  fixImageHeight();
+  capitalizeFirst();
 }
 
 var wrapHtml = function(product){
@@ -27,7 +31,7 @@ var wrapHtml = function(product){
   productHtml = '<div class="product"><div class="imagewrapper">';
   productHtml +=   '<a href="' + product.productUrl + '">';
   productHtml +=     '<img src="' + product.imageUrl + '">';
-  productHtml +=     '<span class="discount">' + product.discount + '</span>';
+  //productHtml +=     '<span class="discount">' + product.discount + '</span>';
   productHtml +=   '</a>';
   productHtml += '</div>'; //Closing imagewrapper
   productHtml += '<div class="product-info-wrapper">'
@@ -36,19 +40,19 @@ var wrapHtml = function(product){
   productHtml += '<div class="pricewrapper">';
   productHtml +=   '<span class="price">' + product.salePrice + '</span>';
   //productHtml +=   '<span class="oldprice">' + oldprice + '$</span>';
-  productHtml +=   '<span class="discount"> ' + product.discount + '</span>';
+  productHtml +=   '<span class="discount"> -' + product.discount + '</span>';
   productHtml += '</div>'; //Closing pricewrapper
   productHtml += '<div class="review">';
   productHtml +=   '<div class="stars">';
-  for(var i = 0; i < parseInt(product.evaluateScore); i++){
+  for(var i = 0; i < Math.round(product.evaluateScore); i++){
     productHtml +=   '<span class="star">*</span>';
   }
   productHtml +=     '<span class="rating">(' + product.evaluateScore + '/5.0)</span>';
   productHtml +=   '</div>'; //Closing stars
   productHtml += '</div>'; //Closing review
-  productHtml += '<div class="buy">';
-  productHtml += '<a href="' + product.productUrl  + '">Buy</a>';
-  productHtml += '</div>'; //Closing buy
+  //productHtml += '<div class="buy">';
+  //productHtml += '<a href="' + product.productUrl  + '">Buy</a>';
+  //productHtml += '</div>'; //Closing buy
   productHtml += '</div>'; //Closing product
   productHtml += '</div>'; //Closing product-info-wrapper
   return productHtml;
@@ -56,6 +60,7 @@ var wrapHtml = function(product){
 
 var categoryIds = [3,34,66,200004360,7,44,5,502,2,1503,200003655,42,15,6,200001996,36,39,1524,1501,21,509,30,322,18,1420,26,200003498,1511,320];
 var mainCategories = {
+  2: "food",
   3: "fashion",
   1524: "fashion",
   1511: "fashion",
@@ -120,6 +125,22 @@ var renderProducts = function(category) {
   renderAllProducts(products, mainCategories);
 }
 
+var fixImageHeight = function() {
+  $(".products .product .imagewrapper").each(function(){
+    if($(this).outerHeight() < $(this).outerWidth()){
+      $(this).css({ "height": $(this).outerWidth() });
+    }
+  });
+}
+
+var capitalizeFirst = function() {
+  $(".products .product .name").each(function(){
+    if($(this).text().charAt(0) != $(this).text().charAt(0).toUpperCase()){
+      $(this).text($(this).text().charAt(0).toUpperCase() + $(this).text().slice(1));
+    }
+  });
+}
+
 $(document).ready(function () {
   //initialize swiper when document ready
   var mySwiper = new Swiper ('.swiper-container', {
@@ -131,6 +152,8 @@ $(document).ready(function () {
 
   $("header li.nav-item").click(function(){
     var productsContainer = $(".products-list-categories");
+    $("header li.nav-item").removeClass("active");
+    $(this).addClass("active");
     //Clear products container
     productsContainer.html("");
     renderProducts($(this).attr("data-category"));

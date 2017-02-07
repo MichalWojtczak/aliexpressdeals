@@ -1,19 +1,29 @@
-header.left-fixed.hidden-md-down
+header
   div.banner
     div.logo-wrapper
       img#logo(src="./images/logo.png")
+    div.carousel-wrapper
+      div.carousel.swiper-container
+        div.swiper-wrapper
+          div.swiper-slide.lobster(style="background: darkseagreen;") Lobster
+          div.swiper-slide.playfair(style="background: coral;") Playfair Display
+          div.swiper-slide.rubik(style="background: lightpink;") Rubik
+          div.swiper-slide.opensanscondensed(style="background: mediumpurple;") Open Sans Condensed
+          div.swiper-slide.opensans(style="background: powderblue;") Open Sans
     div.nav-wrapper
       ul.nav-items
-        li.nav-item(data-category="discount") Most discount
-        li.nav-item(data-category="fashion") Fashion
-        li.nav-item(data-category="electronics") Electronics
-        li.nav-item(data-category="sports") Sports
-        li.nav-item(data-category="healthbeauty") Toys & Hobbies
-        li.nav-item(data-category="toyshobbies") Shoes
-        li.nav-item(data-category="hairaccessories") Hair & Accessories
-        li.nav-item(data-category="kidsbaby") Kids & Baby
-        li.nav-item(data-category="homeoffice") Home & Office
+        li.nav-item.active(data-category="discount") Most discount
         li.nav-item(data-category="automotive") Automotive
+        li.nav-item(data-category="electronics") Electronics
+        li.nav-item(data-category="fashion") Fashion
+        li.nav-item(data-category="food") Food
+        li.nav-item(data-category="hairaccessories") Hair & Accessories
+        li.nav-item(data-category="healthbeauty") Health & Beauty
+        li.nav-item(data-category="homeoffice") Home & Office
+        li.nav-item(data-category="kidsbaby") Kids & Baby
+        li.nav-item(data-category="shoes") Shoes
+        li.nav-item(data-category="sports") Sports & Outdoors
+        li.nav-item(data-category="toyshobbies") Toys & Hobbies
 
 
 

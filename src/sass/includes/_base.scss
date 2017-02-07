@@ -1,19 +1,21 @@
 /*	FONTS
 ------------------------*/
 
-@import url(https://fonts.googleapis.com/css?family=Raleway:400,700);
+@import url(https://fonts.googleapis.com/css?family=Lobster:400,700);
+@import url(https://fonts.googleapis.com/css?family=Playfair+Display:400,700);
+@import url(https://fonts.googleapis.com/css?family=Rubik:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:400,700);
 
 /*	TYPOGRAPHY
 –––––––––––––––––––––––––––*/
 
 body {
-  font-family: 'Raleway', Arial, sans-serif, ;
+  font-family: 'Rubik', Arial, sans-serif;
   color: #555;
   font-size: 100%;
   line-height: 1.5;
-  background-color: #f2f2f2;
   margin: 0;
-  padding-left: 150px;
   @media screen and (max-width: 768px) {
     padding: 0;
   }
