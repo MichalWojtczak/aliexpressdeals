@@ -127,9 +127,9 @@ var renderProducts = function(category) {
 
 var fixImageHeight = function() {
   $(".products .product .imagewrapper").each(function(){
-    if($(this).outerHeight() < $(this).outerWidth()){
+    //if($(this).outerHeight() < $(this).outerWidth()){
       $(this).css({ "height": $(this).outerWidth() });
-    }
+    //}
   });
 }
 
@@ -158,6 +158,10 @@ $(document).ready(function () {
     productsContainer.html("");
     renderProducts($(this).attr("data-category"));
   });
+});
+
+$( window ).resize(function() {
+  fixImageHeight();
 });
 
 

@@ -22,6 +22,13 @@ header {
         padding: 5px;
         margin: 0;
         text-align: center;
+        @media screen and (max-width: 1300px) {
+          width: 800px;
+          margin: auto;
+        }
+        @media screen and (max-width: 800px) {
+          width: 100%;
+        }
         .nav-item {
           padding: 11px 10px 10px 10px;
           display: inline-block;
@@ -40,7 +47,7 @@ header {
   width: 100%;
   .swiper-container {
       width: 100%;
-      height: 300px;
+      height: auto;
       font-size: 72px;
       text-align: center;
       margin: auto;
@@ -58,13 +65,14 @@ header {
     @media screen and (max-width: 768px) {
       width: 50%;
     }
-    padding: 10px;
+    padding: 15px;
     display: inline-block;
     vertical-align: top;
     .imagewrapper {
       display: flex;
       justify-content: center;
       flex-direction: column;
+      overflow: hidden;
       img {
         width: 100%;
       }
